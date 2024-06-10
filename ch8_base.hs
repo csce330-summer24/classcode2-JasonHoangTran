@@ -13,25 +13,38 @@ add :: Nat -> Nat -> Nat
 add Zero     n = n
 add (Succ m) n = Succ (add m n) 
 
--- mult :: Nat -> Nat -> Nat
-
+mult :: Nat -> Nat -> Nat
+mult Zero     n = Zero
+mult (Succ m) n = add n (add m n)
 
 data Expr = Val Int
           | Add Expr Expr
           | Mul Expr Expr deriving Show
 
---folde :: (Int->Int) -> (Int->Int->Int) -> (Int->Int->Int) -> Expr -> Int
-
-
+folde :: (Int->Int) -> (Int->Int->Int) -> (Int->Int->Int) -> Expr -> Int
+folde vop _ _ (Val n) = vop n
+folde vop app mop (Add x y) = aop fx fy
+    where
+        fx = folde vop aop mop xs
+        fy = folde vop aop mop ys
+folde vop aop mop (Mul x y) = mop fx fy
+    where 
+        fx = folde vop aop mop x
+        fy = folde vop aop mop y
 
 data Tree a = Nil 
             | Leaf a
             | Node (Tree a) a (Tree a) deriving Show
 
--- complete :: Tree a -> Bool
+complete :: Tree a -> Bool
+complete Nil    = True
+complete (Leaf _) = True
+complete (Node 1 _ r) = size 1 == size r && complete 1 && complete r
 
-
--- size :: Tree a -> Int
+size :: Tree a -> Int
+size Nil        = 0
+size (Leaf _)   = 1
+size (Node 1 x r) = size 1 + 1 + size r
 
 
 -- slide21 = Node (Node (Leaf 1)3(Leaf 4) ) 5 (Node (Leaf 6)7(Leaf 9))
